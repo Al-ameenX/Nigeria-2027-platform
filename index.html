@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Nigeria 2027 General Elections — Countdown, party directory, and civic data platform for Nigerian voters." />
+  <meta name="theme-color" content="#008751" />
+  <title>Nigeria 2027 | Citizens Accountability Platform</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .hero-band {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .election-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .election-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .election-card.presidential { border-top: 3px solid var(--green); }
+    .election-card.governorship { border-top: 3px solid #7c3aed; }
+    .election-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-bottom: 6px; }
+    .election-date { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+    .cd-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .cd-box { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 8px; padding: 10px 12px; text-align: center; min-width: 56px; }
+    .cd-num { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 900; line-height: 1; color: #fff; }
+    .cd-num.green { color: var(--green); }
+    .cd-num.purple { color: #a78bfa; }
+    .cd-unit { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-top: 3px; }
+    .zone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .zone-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+    .zone-name { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .zone-count { font-size: 11px; color: var(--gray-400); }
+    .zone-pop { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--green); }
+    @media (max-width: 767px) {
+      .election-cards { grid-template-columns: 1fr; }
+      .zone-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile overlay nav -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <div class="sidebar-logo" style="padding:20px 18px">
+        <div class="logo-mark">NG</div>
+        <div class="logo-title">2027 Watch</div>
+        <div class="logo-sub">Citizens Platform</div>
+      </div>
+      <nav class="sidebar-nav" id="mobileNavLinks"></nav>
+    </div>
+  </div>
+
+  <!-- Mobile header -->
+  <header class="mobile-header">
+    <div class="mobile-logo">
+      <span class="mark">NG</span>
+      <span class="name">2027 Watch</span>
+    </div>
+    <div class="mobile-nav-toggle" id="mobileNavToggle">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">NG</div>
+        <div class="logo-title">2027 Watch</div>
+        <div class="logo-sub">Citizens Platform</div>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+      <div class="sidebar-footer">
+        Data: NBS · INEC · BudgIT · CBN · DMO · SBM Intelligence · ACLED
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+
+      <!-- Hero -->
+      <div class="hero-band">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green)">Nigeria 2027 General Elections</span>
+          <span class="badge badge-verified" style="font-size:9px">INEC Official Dates</span>
+        </div>
+        <h1 style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:4px">
+          Your Vote.<br>Your Accountability.
+        </h1>
+        <p style="font-size:12px;color:var(--gray-400);margin-bottom:0">
+          Data-backed civic intelligence for the 2027 election cycle.
+          Every number cited. Every source tagged.
+        </p>
+
+        <div class="election-cards">
+          <!-- Presidential -->
+          <div class="election-card presidential">
+            <div class="election-title">🏛 Presidential &amp; National Assembly</div>
+            <div class="election-date">January 16, 2027</div>
+            <div class="cd-row">
+              <div class="cd-box"><div class="cd-num green" id="cd1-days">---</div><div class="cd-unit">Days</div></div>
+              <div class="cd-box"><div class="cd-num green" id="cd1-hours">--</div><div class="cd-unit">Hrs</div></div>
+              <div class="cd-box"><div class="cd-num green" id="cd1-minutes">--</div><div class="cd-unit">Min</div></div>
+              <div class="cd-box"><div class="cd-num green" id="cd1-seconds">--</div><div class="cd-unit">Sec</div></div>
+            </div>
+          </div>
+          <!-- Governorship -->
+          <div class="election-card governorship">
+            <div class="election-title">🏢 Governorship &amp; State Houses</div>
+            <div class="election-date">February 6, 2027</div>
+            <div class="cd-row">
+              <div class="cd-box"><div class="cd-num purple" id="cd2-days">---</div><div class="cd-unit">Days</div></div>
+              <div class="cd-box"><div class="cd-num purple" id="cd2-hours">--</div><div class="cd-unit">Hrs</div></div>
+              <div class="cd-box"><div class="cd-num purple" id="cd2-minutes">--</div><div class="cd-unit">Min</div></div>
+              <div class="cd-box"><div class="cd-num purple" id="cd2-seconds">--</div><div class="cd-unit">Sec</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="metric-grid mt-4" style="margin-bottom:24px">
+        <div class="metric-card">
+          <div class="metric-label">National Population (2026)</div>
+          <div class="metric-value">~242M</div>
+          <div class="metric-sub">NBS 2022 Census projection</div>
+        </div>
+        <div class="metric-card alert">
+          <div class="metric-label">Inflation Rate (2025)</div>
+          <div class="metric-value red">33.2%</div>
+          <div class="metric-sub">NBS CPI — up from 9% in 2015</div>
+        </div>
+        <div class="metric-card alert">
+          <div class="metric-label">Exchange Rate (2025)</div>
+          <div class="metric-value red">₦1,580/$</div>
+          <div class="metric-sub">CBN — down from ₦197/$ in 2015</div>
+        </div>
+        <div class="metric-card alert">
+          <div class="metric-label">Public Debt (2025)</div>
+          <div class="metric-value red">₦134.3tn</div>
+          <div class="metric-sub">DMO — up from ₦12.6tn in 2015</div>
+        </div>
+      </div>
+
+      <!-- Geopolitical Zones -->
+      <div class="page-header" style="margin-bottom:14px">
+        <div class="page-eyebrow">🗺 Geopolitical Overview</div>
+        <div style="font-size:18px;font-weight:700;color:var(--navy);font-family:'Fraunces',serif">6 Zones · 36 States · 1 FCT</div>
+      </div>
+      <div class="zone-grid" id="zoneGrid"></div>
+
+      <!-- Parties snapshot -->
+      <div style="margin-top:28px">
+        <div class="page-eyebrow" style="margin-bottom:10px">🏛 INEC-Registered Parties</div>
+        <div class="party-grid" id="partyGrid"></div>
+        <div class="alert-banner mt-12">
+          <strong>19+ parties</strong> are registered by INEC for the 2027 election cycle.
+          <a href="parties.html" style="color:var(--green);font-weight:700;margin-left:4px">View full directory →</a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <a href="index.html"          class="bottom-nav-item active"><span class="bn-icon">⏱</span>Home</a>
+      <a href="geopolitical.html"   class="bottom-nav-item"><span class="bn-icon">🗺</span>States</a>
+      <a href="accountability.html" class="bottom-nav-item"><span class="bn-icon">📉</span>Audit</a>
+      <a href="parties.html"        class="bottom-nav-item"><span class="bn-icon">🏛</span>Parties</a>
+      <a href="hub.html"            class="bottom-nav-item"><span class="bn-icon">🗣</span>Hub</a>
+    </div>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    /* Sidebar nav */
+    document.getElementById('sidebarNav').innerHTML  = buildSidebarNav('index.html');
+    document.getElementById('mobileNavLinks').innerHTML = buildSidebarNav('index.html');
+
+    /* Zone grid */
+    const zg = document.getElementById('zoneGrid');
+    NG2027.ZONES.forEach(z => {
+      zg.innerHTML += `
+        <div class="zone-card">
+          <div class="zone-pop">${z.pop_m}M</div>
+          <div class="zone-name">${z.name}</div>
+          <div class="zone-count">${z.states.length} states</div>
+        </div>`;
+    });
+
+    /* Party grid — first 8 */
+    const pg = document.getElementById('partyGrid');
+    NG2027.PARTIES.slice(0, 8).forEach(p => {
+      const tagClass = ['APC','PDP','LP','NNPP','SDP'].includes(p.abbr) ? `party-${p.abbr}` : 'party-OTHER';
+      pg.innerHTML += `
+        <div class="party-card" onclick="location.href='parties.html'">
+          <div class="abbr" style="color:${p.color}">${p.abbr}</div>
+          <div class="full-name">${p.full}</div>
+          <div class="chair">Chair: ${p.chair}</div>
+          <div style="margin-top:6px"><span class="party-tag ${tagClass}">${p.ideology.split('/')[0].trim()}</span></div>
+        </div>`;
+    });
+  </script>
+</body>
+</html>

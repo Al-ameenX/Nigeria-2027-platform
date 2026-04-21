@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Party Directory | Nigeria 2027</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <div class="sidebar-logo" style="padding:20px 18px">
+        <div class="logo-mark">NG</div><div class="logo-title">2027 Watch</div><div class="logo-sub">Citizens Platform</div>
+      </div>
+      <nav class="sidebar-nav" id="mobileNavLinks"></nav>
+    </div>
+  </div>
+
+  <header class="mobile-header">
+    <div class="mobile-logo"><span class="mark">NG</span><span class="name">Party Directory</span></div>
+    <div class="mobile-nav-toggle" id="mobileNavToggle"><span></span><span></span><span></span></div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">NG</div><div class="logo-title">2027 Watch</div><div class="logo-sub">Citizens Platform</div>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+      <div class="sidebar-footer">Source: INEC Party Register 2026</div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-eyebrow">🏛 INEC-Registered Parties</div>
+        <h1 class="page-title">Party Directory 2026</h1>
+        <p class="page-sub">All parties cleared by INEC for the 2027 election cycle</p>
+      </div>
+
+      <!-- Search & filter -->
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+        <input type="text" id="partySearch" placeholder="Search parties..." oninput="filterParties()"
+          style="flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:13px;outline:none" />
+        <span class="badge badge-verified">✓ INEC Register 2026</span>
+      </div>
+
+      <!-- Party Count -->
+      <div style="font-size:11px;color:var(--gray-400);margin-bottom:14px"><span id="partyCount">19</span> parties registered</div>
+
+      <!-- Party Grid -->
+      <div class="party-grid" id="partyGrid"></div>
+
+      <!-- Data source -->
+      <div class="alert-banner mt-20">
+        <strong>Data source:</strong> Independent National Electoral Commission (INEC) — Official Party Register, last updated 2026. 
+        Chairpersons listed reflect known party leadership as of Q1 2025; positions are subject to change through internal party elections.
+      </div>
+
+      <!-- Table view -->
+      <div style="margin-top:28px">
+        <div class="section-label">Full Registry Table</div>
+        <div class="card" style="overflow-x:auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Abbreviation</th><th>Full Name</th><th>National Chairman</th><th>Founded</th><th>Ideology</th>
+              </tr>
+            </thead>
+            <tbody id="partyTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <a href="index.html"          class="bottom-nav-item"><span class="bn-icon">⏱</span>Home</a>
+      <a href="geopolitical.html"   class="bottom-nav-item"><span class="bn-icon">🗺</span>States</a>
+      <a href="accountability.html" class="bottom-nav-item"><span class="bn-icon">📉</span>Audit</a>
+      <a href="parties.html"        class="bottom-nav-item active"><span class="bn-icon">🏛</span>Parties</a>
+      <a href="hub.html"            class="bottom-nav-item"><span class="bn-icon">🗣</span>Hub</a>
+    </div>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('sidebarNav').innerHTML = buildSidebarNav('parties.html');
+    document.getElementById('mobileNavLinks').innerHTML = buildSidebarNav('parties.html');
+
+    function renderPartyGrid(list) {
+      const grid = document.getElementById('partyGrid');
+      const PARTY_COLORS = { APC:'#166534',PDP:'#1e40af',LP:'#991b1b',NNPP:'#6b21a8',SDP:'#0e7490',APGA:'#065f46' };
+      grid.innerHTML = list.map(p => {
+        const color = PARTY_COLORS[p.abbr] || '#374151';
+        const tagClass = ['APC','PDP','LP','NNPP','SDP'].includes(p.abbr) ? `party-${p.abbr}` : 'party-OTHER';
+        return `
+          <div class="party-card">
+            <div class="abbr" style="color:${color}">${p.abbr}</div>
+            <div class="full-name">${p.full}</div>
+            <div class="chair" style="margin-bottom:8px">🪑 ${p.chair}</div>
+            <div><span class="party-tag ${tagClass}">${p.ideology.split('/')[0].trim()}</span></div>
+            <div style="margin-top:6px;font-size:10px;color:var(--gray-400)">Est. ${p.founded} · ${p.zone}</div>
+          </div>`;
+      }).join('');
+      document.getElementById('partyCount').textContent = list.length;
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('partyTableBody');
+      const PARTY_COLORS = { APC:'#166534',PDP:'#1e40af',LP:'#991b1b',NNPP:'#6b21a8',SDP:'#0e7490' };
+      tbody.innerHTML = list.map(p => {
+        const color = PARTY_COLORS[p.abbr] || '#374151';
+        return `<tr>
+          <td><strong style="color:${color}">${p.abbr}</strong></td>
+          <td>${p.full}</td>
+          <td>${p.chair}</td>
+          <td>${p.founded}</td>
+          <td style="font-size:11px;color:var(--gray-500)">${p.ideology}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    renderPartyGrid(NG2027.PARTIES);
+    renderTable(NG2027.PARTIES);
+
+    function filterParties() {
+      const q = document.getElementById('partySearch').value.toLowerCase();
+      const filtered = NG2027.PARTIES.filter(p =>
+        p.abbr.toLowerCase().includes(q) ||
+        p.full.toLowerCase().includes(q) ||
+        p.ideology.toLowerCase().includes(q) ||
+        p.chair.toLowerCase().includes(q)
+      );
+      renderPartyGrid(filtered);
+      renderTable(filtered);
+    }
+  </script>
+</body>
+</html>
