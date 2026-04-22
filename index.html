@@ -1,220 +1,1208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Nigeria 2027 General Elections — Countdown, party directory, and civic data platform for Nigerian voters." />
-  <meta name="theme-color" content="#008751" />
-  <title>Nigeria 2027 | Citizens Accountability Platform</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <style>
-    .hero-band {
-      background: var(--navy);
-      border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      color: #fff;
-      margin-bottom: 24px;
-    }
-    .election-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
-    .election-card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: var(--radius-md);
-      padding: 16px;
-    }
-    .election-card.presidential { border-top: 3px solid var(--green); }
-    .election-card.governorship { border-top: 3px solid #7c3aed; }
-    .election-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-bottom: 6px; }
-    .election-date { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 12px; }
-    .cd-row { display: flex; gap: 6px; flex-wrap: wrap; }
-    .cd-box { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 8px; padding: 10px 12px; text-align: center; min-width: 56px; }
-    .cd-num { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 900; line-height: 1; color: #fff; }
-    .cd-num.green { color: var(--green); }
-    .cd-num.purple { color: #a78bfa; }
-    .cd-unit { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gray-400); margin-top: 3px; }
-    .zone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .zone-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 14px;
-    }
-    .zone-name { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-    .zone-count { font-size: 11px; color: var(--gray-400); }
-    .zone-pop { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--green); }
-    @media (max-width: 767px) {
-      .election-cards { grid-template-columns: 1fr; }
-      .zone-grid { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#008751"/>
+<title>Nigeria 2027 | Citizens Accountability Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════
+   CSS VARIABLES & RESET
+══════════════════════════════════════ */
+:root{
+  --green:#008751;--green-lt:#e6f4ed;--green-bd:#a8d5bc;
+  --navy:#0F172A;--navy-mid:#1e293b;--navy-lt:#334155;
+  --red:#E11D48;--red-lt:#fff1f4;--red-bd:#fecaca;
+  --amber:#d97706;--amber-lt:#fffbeb;--amber-bd:#fde68a;
+  --gray-bg:#F8FAFC;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-700:#374151;
+  --white:#fff;
+  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.09);
+  --sidebar-w:220px;
+  --transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:14px;line-height:1.6;color:var(--navy);background:var(--gray-bg);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{max-width:100%;display:block}
+ul,ol{list-style:none}
+
+/* ══════════════════════════════════════
+   LAYOUT SHELL
+══════════════════════════════════════ */
+.app-shell{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:var(--navy);display:flex;flex-direction:column;z-index:100;
+}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-mark{font-family:var(--font-display);font-size:26px;font-weight:900;color:var(--green);line-height:1}
+.logo-title{font-size:12px;font-weight:700;color:#fff;margin-top:3px}
+.logo-sub{font-size:9px;color:var(--gray-400);font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.sidebar-nav{padding:10px 8px;flex:1}
+.nav-section-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);padding:10px 8px 5px}
+.nav-link{
+  display:flex;align-items:center;gap:9px;padding:9px 10px;
+  border-radius:var(--radius-sm);font-size:13px;font-weight:500;
+  color:#94a3b8;transition:var(--transition);margin-bottom:2px;cursor:pointer;
+}
+.nav-link:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-link.active{background:rgba(0,135,81,.18);color:var(--green);font-weight:700}
+.nav-icon{font-size:15px;width:20px;text-align:center}
+.sidebar-footer{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;color:var(--gray-500);line-height:1.5}
+
+/* Main content */
+.main-content{flex:1;min-width:0;padding:28px 24px;max-width:1100px}
+
+/* Page sections */
+.page{display:none}
+.page.active{display:block}
+
+/* Page header */
+.page-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.page-title{font-family:var(--font-display);font-size:26px;font-weight:900;color:var(--navy);line-height:1.15}
+.page-sub{font-size:13px;color:var(--gray-500);margin-top:4px}
+.page-header{margin-bottom:22px}
+
+/* Mobile header */
+.mobile-header{
+  display:none;position:sticky;top:0;z-index:200;
+  background:var(--navy);padding:12px 16px;
+  align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow-sm);
+}
+.mobile-logo{display:flex;align-items:center;gap:8px}
+.mobile-logo .mark{font-family:var(--font-display);font-size:20px;font-weight:900;color:var(--green)}
+.mobile-logo .name{font-size:13px;font-weight:700;color:#fff}
+.mobile-menu-btn{display:flex;flex-direction:column;gap:4px;padding:4px;cursor:pointer}
+.mobile-menu-btn span{display:block;width:22px;height:2px;background:#fff;border-radius:2px}
+
+/* Mobile drawer */
+.drawer-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5)}
+.drawer-overlay.open{display:block}
+.drawer-panel{
+  position:absolute;top:0;left:0;width:240px;height:100%;
+  background:var(--navy);overflow-y:auto;
+  transform:translateX(-100%);transition:transform .3s ease;
+}
+.drawer-panel.open{transform:translateX(0)}
+
+/* Bottom nav mobile */
+.bottom-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  z-index:200;background:var(--navy);
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:8px 0 12px;
+}
+.bottom-nav-inner{display:flex;justify-content:space-around}
+.bn-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 8px;font-size:10px;color:var(--gray-500);
+  font-weight:600;cursor:pointer;transition:var(--transition);
+}
+.bn-item.active{color:var(--green)}
+.bn-icon{font-size:18px}
+
+/* ══════════════════════════════════════
+   CARDS & COMPONENTS
+══════════════════════════════════════ */
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-body{padding:20px}
+
+/* Metric grid */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.metric-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:14px}
+.metric-card.alert{background:var(--red-lt);border-color:var(--red-bd)}
+.metric-card.success{background:var(--green-lt);border-color:var(--green-bd)}
+.metric-card.warn{background:var(--amber-lt);border-color:var(--amber-bd)}
+.m-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:5px}
+.m-value{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--navy);line-height:1.1}
+.m-value.red{color:var(--red)}
+.m-value.green{color:var(--green)}
+.m-sub{font-size:10px;color:var(--gray-400);margin-top:3px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.badge-v{background:var(--green-lt);border:1px solid var(--green-bd);color:#166534}
+.badge-c{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.badge-a{background:var(--red-lt);border:1px solid var(--red-bd);color:#991b1b}
+
+/* Party tags */
+.ptag{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700}
+.pt-APC{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.pt-PDP{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
+.pt-LP{background:#fff5f5;color:#991b1b;border:1px solid #fecaca}
+.pt-NNPP{background:#faf5ff;color:#6b21a8;border:1px solid #e9d5ff}
+.pt-SDP{background:#ecfeff;color:#0e7490;border:1px solid #a5f3fc}
+.pt-other{background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200)}
+
+/* Security badges */
+.sec-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase}
+.sec-critical{background:#fff5f5;border:1px solid #fecaca;color:#991b1b}
+.sec-high{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.sec-moderate{background:#fefce8;border:1px solid #fde047;color:#713f12}
+.sec-stable{background:var(--green-lt);border:1px solid var(--green-bd);color:#166534}
+.sec-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* Pills */
+.pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.pill{padding:5px 13px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-500);cursor:pointer;transition:var(--transition)}
+.pill:hover{border-color:var(--gray-400);color:var(--navy)}
+.pill.p-navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pill.p-green{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* Progress */
+.prog-bar{height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden;margin-top:7px}
+.prog-fill{height:100%;border-radius:3px;background:var(--red);transition:width .4s ease}
+
+/* Section label */
+.sec-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--gray-200)}
+
+/* Divider */
+.divider{height:1px;background:var(--gray-200);margin:18px 0}
+
+/* Alert banner */
+.alert-banner{background:var(--amber-lt);border:1px solid var(--amber-bd);border-radius:var(--radius-md);padding:12px 16px;font-size:12px;color:#7c3400}
+
+/* Analyst notes */
+.analyst-notes{background:var(--amber-lt);border:1px solid var(--amber-bd);border-radius:var(--radius-md);padding:12px 14px;font-size:12px;color:#78350f;line-height:1.65}
+
+/* Grid helpers */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* Spacing */
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt28{margin-top:28px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-400);border-bottom:1px solid var(--gray-200);background:var(--gray-100)}
+.data-table td{padding:10px;border-bottom:1px solid var(--gray-100);color:var(--gray-700);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--gray-100)}
+
+/* ══════════════════════════════════════
+   HOME PAGE — COUNTDOWN
+══════════════════════════════════════ */
+.hero-band{background:var(--navy);border-radius:var(--radius-lg);padding:24px;color:#fff;margin-bottom:20px}
+.election-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.el-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:14px}
+.el-card.pres{border-top:3px solid var(--green)}
+.el-card.gov{border-top:3px solid #7c3aed}
+.el-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);margin-bottom:5px}
+.el-date{font-size:12px;font-weight:600;color:#fff;margin-bottom:10px}
+.cd-row{display:flex;gap:6px;flex-wrap:wrap}
+.cd-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;text-align:center;min-width:52px}
+.cd-num{font-family:var(--font-display);font-size:24px;font-weight:900;line-height:1;color:#fff}
+.cd-num.gn{color:var(--green)}
+.cd-num.pu{color:#a78bfa}
+.cd-unit{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);margin-top:3px}
+.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.zone-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:12px}
+.zone-pop{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--green)}
+.zone-name{font-size:12px;font-weight:700;color:var(--navy);margin-top:2px}
+.zone-count{font-size:11px;color:var(--gray-400)}
+
+/* Party grid */
+.party-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.party-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:14px;transition:var(--transition);cursor:pointer}
+.party-card:hover{border-color:var(--green);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.p-abbr{font-family:var(--font-display);font-size:22px;font-weight:900;margin-bottom:5px}
+.p-full{font-size:11px;font-weight:600;color:var(--gray-700);line-height:1.3;margin-bottom:5px}
+.p-chair{font-size:10px;color:var(--gray-400)}
+
+/* ══════════════════════════════════════
+   GEOPOLITICAL PAGE
+══════════════════════════════════════ */
+.state-hdr{background:var(--navy);padding:16px 18px;color:#fff;border-radius:var(--radius-md) var(--radius-md) 0 0}
+.state-title{font-family:var(--font-display);font-size:21px;font-weight:900;color:#fff}
+.state-pop-num{font-family:var(--font-display);font-size:26px;font-weight:900;color:#fff}
+.debt-breakdown{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden}
+.debt-cell{padding:12px;text-align:center}
+.debt-cell:not(:last-child){border-right:1px solid var(--gray-100)}
+.debt-num{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--navy)}
+.debt-num.red{color:var(--red)}
+.debt-bar-wrap{display:flex;height:10px;border-radius:5px;overflow:hidden;gap:2px;margin-top:8px}
+.db-dom{background:var(--navy);border-radius:5px 0 0 5px}
+.db-ext{background:var(--red);border-radius:0 5px 5px 0}
+.industry-tag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:600;background:var(--gray-100);border:1px solid var(--gray-200);color:var(--gray-700);margin:3px 3px 0 0}
+
+/* ══════════════════════════════════════
+   ACCOUNTABILITY PAGE
+══════════════════════════════════════ */
+.red-bar{height:3px;background:linear-gradient(90deg,var(--red),#f87171,#fca5a5)}
+.slide-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:340px}
+.slide-left{padding:18px;border-right:1px solid var(--gray-100)}
+.slide-right{padding:18px;display:flex;flex-direction:column}
+.slide-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:4px}
+.slide-hed{font-family:var(--font-display);font-size:17px;font-weight:900;color:var(--navy);line-height:1.25;margin-bottom:8px}
+.slide-body-txt{font-size:12px;color:var(--gray-500);line-height:1.65}
+.slide-metric{background:var(--red-lt);border:1px solid var(--red-bd);border-radius:var(--radius-md);padding:12px;margin-top:12px}
+.slide-big{font-family:var(--font-display);font-size:30px;font-weight:900;color:var(--red)}
+.slide-controls{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:var(--gray-100);border-top:1px solid var(--gray-200)}
+.slide-dots{display:flex;gap:5px;align-items:center}
+.sdot{height:5px;border-radius:3px;background:var(--gray-300);border:none;cursor:pointer;transition:var(--transition)}
+.sdot.active{width:28px;background:var(--red)}
+.sdot:not(.active){width:5px}
+.ctrl-btn{width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--gray-200);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--gray-700);transition:var(--transition)}
+.ctrl-btn:hover{background:var(--gray-100)}
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.mini-stat{background:var(--red-lt);border:1px solid var(--red-bd);border-radius:var(--radius-md);padding:12px}
+
+/* ══════════════════════════════════════
+   HUB PAGE
+══════════════════════════════════════ */
+.hub-banner{background:var(--navy);border-radius:var(--radius-lg);padding:18px;color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.post-wrap{display:flex;flex-direction:column;gap:10px}
+.hub-post{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:14px;transition:var(--transition)}
+.hub-post:hover{box-shadow:var(--shadow-md)}
+.post-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.star-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700;border:1px solid}
+.upvote-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:var(--radius-sm);border:1px solid var(--gray-200);background:var(--white);font-size:11px;font-weight:600;color:var(--gray-700);cursor:pointer;transition:var(--transition)}
+.upvote-btn:hover{background:var(--green-lt);border-color:var(--green-bd);color:var(--green)}
+.truth-score{display:flex;align-items:center;gap:6px}
+.tscore-bar{flex:1;height:4px;background:var(--gray-100);border-radius:2px;overflow:hidden}
+.tscore-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.post-tag{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);margin:2px 2px 0 0}
+.star-explainer{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.sl-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:10px;text-align:center}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:1023px){
+  .sidebar{width:180px}
+  .g4{grid-template-columns:1fr 1fr}
+  .slide-wrap{grid-template-columns:1fr}
+  .slide-left{border-right:none;border-bottom:1px solid var(--gray-100)}
+  .mini-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:767px){
+  .sidebar{display:none}
+  .mobile-header{display:flex}
+  .bottom-nav{display:block}
+  .main-content{padding:14px;padding-bottom:86px}
+  .page-title{font-size:20px}
+  .g2{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr 1fr}
+  .g4{grid-template-columns:1fr 1fr}
+  .election-cards{grid-template-columns:1fr}
+  .zone-grid{grid-template-columns:1fr 1fr}
+  .party-grid{grid-template-columns:1fr 1fr}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .slide-wrap{grid-template-columns:1fr}
+  .slide-left{border-right:none;border-bottom:1px solid var(--gray-100)}
+  .mini-stats{grid-template-columns:1fr 1fr}
+  .star-explainer{grid-template-columns:1fr 1fr}
+  .debt-breakdown{grid-template-columns:1fr 1fr}
+  .data-table{font-size:11px}
+  .data-table th,.data-table td{padding:7px 8px}
+}
+@media(max-width:480px){
+  .g3{grid-template-columns:1fr}
+  .zone-grid{grid-template-columns:1fr}
+  .star-explainer{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-  <!-- Mobile overlay nav -->
-  <div class="mobile-nav-overlay" id="mobileNavOverlay">
-    <div class="mobile-nav-panel" id="mobileNavPanel">
-      <div class="sidebar-logo" style="padding:20px 18px">
-        <div class="logo-mark">NG</div>
-        <div class="logo-title">2027 Watch</div>
-        <div class="logo-sub">Citizens Platform</div>
-      </div>
-      <nav class="sidebar-nav" id="mobileNavLinks"></nav>
+<!-- ═══════════════════════════════════════════════
+     MOBILE DRAWER
+═══════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()">
+  <div class="drawer-panel" id="drawerPanel">
+    <div class="sidebar-logo" style="padding:18px 16px">
+      <div class="logo-mark">NG</div>
+      <div class="logo-title">2027 Watch</div>
+      <div class="logo-sub">Citizens Platform</div>
     </div>
+    <nav class="sidebar-nav" id="drawerNav"></nav>
   </div>
+</div>
 
-  <!-- Mobile header -->
-  <header class="mobile-header">
-    <div class="mobile-logo">
-      <span class="mark">NG</span>
-      <span class="name">2027 Watch</span>
+<!-- Mobile header -->
+<header class="mobile-header">
+  <div class="mobile-logo">
+    <span class="mark">NG</span>
+    <span class="name">2027 Watch</span>
+  </div>
+  <div class="mobile-menu-btn" onclick="openDrawer()">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<div class="app-shell">
+  <!-- ═══════ SIDEBAR ═══════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">NG</div>
+      <div class="logo-title">2027 Watch</div>
+      <div class="logo-sub">Citizens Platform</div>
     </div>
-    <div class="mobile-nav-toggle" id="mobileNavToggle">
-      <span></span><span></span><span></span>
+    <nav class="sidebar-nav" id="desktopNav"></nav>
+    <div class="sidebar-footer">
+      Data: NBS · INEC · BudgIT · CBN · DMO · SBM Intel · ACLED
     </div>
-  </header>
+  </aside>
 
-  <div class="app-shell">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-mark">NG</div>
-        <div class="logo-title">2027 Watch</div>
-        <div class="logo-sub">Citizens Platform</div>
-      </div>
-      <nav class="sidebar-nav" id="sidebarNav"></nav>
-      <div class="sidebar-footer">
-        Data: NBS · INEC · BudgIT · CBN · DMO · SBM Intelligence · ACLED
-      </div>
-    </aside>
+  <!-- ═══════ MAIN ═══════ -->
+  <main class="main-content">
 
-    <!-- Main content -->
-    <main class="main-content">
+    <!-- ══════════════════════════════════════
+         PAGE 1 — HOME / COUNTDOWN
+    ══════════════════════════════════════ -->
+    <div class="page active" id="page-home">
 
-      <!-- Hero -->
       <div class="hero-band">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green)">Nigeria 2027 General Elections</span>
-          <span class="badge badge-verified" style="font-size:9px">INEC Official Dates</span>
+          <span class="badge badge-v" style="font-size:9px">INEC Official Dates</span>
         </div>
-        <h1 style="font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:4px">
-          Your Vote.<br>Your Accountability.
-        </h1>
-        <p style="font-size:12px;color:var(--gray-400);margin-bottom:0">
-          Data-backed civic intelligence for the 2027 election cycle.
-          Every number cited. Every source tagged.
-        </p>
-
+        <h1 style="font-family:var(--font-display);font-size:24px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:4px">Your Vote. Your Accountability.</h1>
+        <p style="font-size:12px;color:var(--gray-400)">Data-backed civic intelligence. Every number cited. Every source tagged.</p>
         <div class="election-cards">
-          <!-- Presidential -->
-          <div class="election-card presidential">
-            <div class="election-title">🏛 Presidential &amp; National Assembly</div>
-            <div class="election-date">January 16, 2027</div>
+          <div class="el-card pres">
+            <div class="el-title">🏛 Presidential &amp; National Assembly</div>
+            <div class="el-date">January 16, 2027</div>
             <div class="cd-row">
-              <div class="cd-box"><div class="cd-num green" id="cd1-days">---</div><div class="cd-unit">Days</div></div>
-              <div class="cd-box"><div class="cd-num green" id="cd1-hours">--</div><div class="cd-unit">Hrs</div></div>
-              <div class="cd-box"><div class="cd-num green" id="cd1-minutes">--</div><div class="cd-unit">Min</div></div>
-              <div class="cd-box"><div class="cd-num green" id="cd1-seconds">--</div><div class="cd-unit">Sec</div></div>
+              <div class="cd-box"><div class="cd-num gn" id="cd1d">---</div><div class="cd-unit">Days</div></div>
+              <div class="cd-box"><div class="cd-num gn" id="cd1h">--</div><div class="cd-unit">Hrs</div></div>
+              <div class="cd-box"><div class="cd-num gn" id="cd1m">--</div><div class="cd-unit">Min</div></div>
+              <div class="cd-box"><div class="cd-num gn" id="cd1s">--</div><div class="cd-unit">Sec</div></div>
             </div>
           </div>
-          <!-- Governorship -->
-          <div class="election-card governorship">
-            <div class="election-title">🏢 Governorship &amp; State Houses</div>
-            <div class="election-date">February 6, 2027</div>
+          <div class="el-card gov">
+            <div class="el-title">🏢 Governorship &amp; State Houses</div>
+            <div class="el-date">February 6, 2027</div>
             <div class="cd-row">
-              <div class="cd-box"><div class="cd-num purple" id="cd2-days">---</div><div class="cd-unit">Days</div></div>
-              <div class="cd-box"><div class="cd-num purple" id="cd2-hours">--</div><div class="cd-unit">Hrs</div></div>
-              <div class="cd-box"><div class="cd-num purple" id="cd2-minutes">--</div><div class="cd-unit">Min</div></div>
-              <div class="cd-box"><div class="cd-num purple" id="cd2-seconds">--</div><div class="cd-unit">Sec</div></div>
+              <div class="cd-box"><div class="cd-num pu" id="cd2d">---</div><div class="cd-unit">Days</div></div>
+              <div class="cd-box"><div class="cd-num pu" id="cd2h">--</div><div class="cd-unit">Hrs</div></div>
+              <div class="cd-box"><div class="cd-num pu" id="cd2m">--</div><div class="cd-unit">Min</div></div>
+              <div class="cd-box"><div class="cd-num pu" id="cd2s">--</div><div class="cd-unit">Sec</div></div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Quick stats -->
-      <div class="metric-grid mt-4" style="margin-bottom:24px">
-        <div class="metric-card">
-          <div class="metric-label">National Population (2026)</div>
-          <div class="metric-value">~242M</div>
-          <div class="metric-sub">NBS 2022 Census projection</div>
-        </div>
-        <div class="metric-card alert">
-          <div class="metric-label">Inflation Rate (2025)</div>
-          <div class="metric-value red">33.2%</div>
-          <div class="metric-sub">NBS CPI — up from 9% in 2015</div>
-        </div>
-        <div class="metric-card alert">
-          <div class="metric-label">Exchange Rate (2025)</div>
-          <div class="metric-value red">₦1,580/$</div>
-          <div class="metric-sub">CBN — down from ₦197/$ in 2015</div>
-        </div>
-        <div class="metric-card alert">
-          <div class="metric-label">Public Debt (2025)</div>
-          <div class="metric-value red">₦134.3tn</div>
-          <div class="metric-sub">DMO — up from ₦12.6tn in 2015</div>
-        </div>
+      <div class="metric-grid mb16">
+        <div class="metric-card"><div class="m-label">Population (2026)</div><div class="m-value">~242M</div><div class="m-sub">NBS 2022 Census projection</div></div>
+        <div class="metric-card alert"><div class="m-label">Inflation (2025)</div><div class="m-value red">33.2%</div><div class="m-sub">NBS CPI — up from 9% in 2015</div></div>
+        <div class="metric-card alert"><div class="m-label">Exchange Rate (2025)</div><div class="m-value red">₦1,580/$</div><div class="m-sub">CBN — down from ₦197/$ in 2015</div></div>
+        <div class="metric-card alert"><div class="m-label">Public Debt (2025)</div><div class="m-value red">₦134.3tn</div><div class="m-sub">DMO — up from ₦12.6tn in 2015</div></div>
       </div>
 
-      <!-- Geopolitical Zones -->
-      <div class="page-header" style="margin-bottom:14px">
+      <!-- Zones -->
+      <div class="page-header" style="margin-bottom:12px">
         <div class="page-eyebrow">🗺 Geopolitical Overview</div>
-        <div style="font-size:18px;font-weight:700;color:var(--navy);font-family:'Fraunces',serif">6 Zones · 36 States · 1 FCT</div>
+        <div style="font-size:17px;font-weight:700;color:var(--navy);font-family:var(--font-display)">6 Zones · 36 States · 1 FCT</div>
       </div>
-      <div class="zone-grid" id="zoneGrid"></div>
+      <div class="zone-grid" id="homeZoneGrid"></div>
 
-      <!-- Parties snapshot -->
-      <div style="margin-top:28px">
+      <!-- Parties -->
+      <div class="mt28">
         <div class="page-eyebrow" style="margin-bottom:10px">🏛 INEC-Registered Parties</div>
-        <div class="party-grid" id="partyGrid"></div>
-        <div class="alert-banner mt-12">
-          <strong>19+ parties</strong> are registered by INEC for the 2027 election cycle.
-          <a href="parties.html" style="color:var(--green);font-weight:700;margin-left:4px">View full directory →</a>
+        <div class="party-grid" id="homePartyGrid"></div>
+        <div class="alert-banner mt12">
+          <strong>19+ parties</strong> registered by INEC for the 2027 cycle.
+          <span onclick="showPage('parties')" style="color:var(--green);font-weight:700;cursor:pointer;margin-left:4px">View full directory →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PAGE 2 — GEOPOLITICAL DATA HUB
+    ══════════════════════════════════════ -->
+    <div class="page" id="page-geo">
+      <div class="page-header">
+        <div class="page-eyebrow">🗺 Geopolitical Data Hub</div>
+        <h1 class="page-title">State Performance Dashboard</h1>
+        <p class="page-sub">Fiscal, demographic &amp; security data · 2024/25 · All sources verified</p>
+      </div>
+
+      <div class="pill-group" id="zoneFilter"></div>
+      <div class="pill-group" id="stateSelector"></div>
+
+      <!-- State card -->
+      <div class="card" id="stateCard">
+        <div class="state-hdr" id="stateHdr">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                <span class="state-title" id="sName">Kano State</span>
+                <span class="sec-badge" id="sSecBadge"></span>
+              </div>
+              <div style="font-size:11px;color:var(--gray-400)" id="sSub"></div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:2px">2026 Pop.</div>
+              <div class="state-pop-num" id="sPop">17.4M</div>
+              <div style="font-size:10px;color:var(--gray-400)" id="sGdp">3.1% of national GDP</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:18px">
+          <div class="sec-lbl">💰 Fiscal Profile · 2024</div>
+          <div class="metric-grid mb16">
+            <div class="metric-card success"><div class="m-label">IGR 2024</div><div class="m-value green" id="sIGR">₦28.6bn</div><div class="m-sub">Internally Generated Revenue</div></div>
+            <div class="metric-card"><div class="m-label">Gross FAAC 2024</div><div class="m-value" id="sFAAC">₦187.3bn</div><div class="m-sub" id="sFAACnote">+112.4% YoY</div></div>
+            <div class="metric-card alert"><div class="m-label">FAAC Dependency</div><div class="m-value red" id="sDep">86.8%</div><div class="m-sub">Share of total revenue</div><div class="prog-bar"><div class="prog-fill" id="sDepBar" style="width:86.8%"></div></div></div>
+            <div class="metric-card alert"><div class="m-label">Debt-to-Revenue</div><div class="m-value red" id="sDTR">89.7%</div><div class="m-sub" id="sDTRsub">₦196.8bn total</div><div class="prog-bar"><div class="prog-fill" id="sDTRBar" style="width:89.7%"></div></div></div>
+          </div>
+
+          <div class="sec-lbl">🔷 Debt Breakdown</div>
+          <div class="debt-breakdown mb16">
+            <div class="debt-cell"><div style="font-size:9px;color:var(--gray-400);margin-bottom:4px">Total Debt</div><div class="debt-num" id="dTotal">₦196.8bn</div></div>
+            <div class="debt-cell"><div style="font-size:9px;color:var(--gray-400);margin-bottom:4px">Domestic</div><div class="debt-num" id="dDom">₦121.4bn</div></div>
+            <div class="debt-cell"><div style="font-size:9px;color:var(--gray-400);margin-bottom:4px">External</div><div class="debt-num red" id="dExt">₦75.4bn</div></div>
+            <div style="grid-column:1/-1;padding:4px 14px 12px">
+              <div class="debt-bar-wrap"><div class="db-dom" id="dbDom" style="width:62%"></div><div class="db-ext" style="flex:1"></div></div>
+              <div style="display:flex;gap:12px;margin-top:5px">
+                <span style="font-size:10px;color:var(--gray-500);display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:var(--navy);display:inline-block"></span>Domestic</span>
+                <span style="font-size:10px;color:var(--gray-500);display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:var(--red);display:inline-block"></span>External</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sec-lbl">👥 Labour &amp; Poverty</div>
+          <div class="g2 mb16">
+            <div class="metric-card alert"><div class="m-label">Unemployment Rate</div><div class="m-value red" id="sUnemp">34.2%</div><div class="m-sub">NBS Labour Force Survey 2024</div></div>
+            <div class="metric-card alert"><div class="m-label">Poverty Rate</div><div class="m-value red" id="sPoverty">68.4%</div><div class="m-sub">Below ₦137.43/day threshold</div></div>
+          </div>
+
+          <div class="sec-lbl mb8">🏭 Key Industries</div>
+          <div id="sIndustries" style="margin-bottom:14px"></div>
+
+          <div class="analyst-notes mb16" id="sNotes"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px solid var(--gray-200)">
+            <span class="badge badge-v">✓ Verified · <span id="sSource"></span></span>
+            <span style="font-size:10px;color:var(--gray-400);font-family:var(--font-mono)">Verified: <span id="sVerified"></span></span>
+          </div>
         </div>
       </div>
 
-    </main>
-  </div>
-
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <a href="index.html"          class="bottom-nav-item active"><span class="bn-icon">⏱</span>Home</a>
-      <a href="geopolitical.html"   class="bottom-nav-item"><span class="bn-icon">🗺</span>States</a>
-      <a href="accountability.html" class="bottom-nav-item"><span class="bn-icon">📉</span>Audit</a>
-      <a href="parties.html"        class="bottom-nav-item"><span class="bn-icon">🏛</span>Parties</a>
-      <a href="hub.html"            class="bottom-nav-item"><span class="bn-icon">🗣</span>Hub</a>
+      <!-- Comparison table -->
+      <div class="mt28">
+        <div class="sec-lbl">📊 State Comparison Table</div>
+        <div class="card" style="overflow-x:auto">
+          <table class="data-table"><thead><tr>
+            <th>State</th><th>Zone</th><th>Party</th><th>Pop M</th>
+            <th>IGR 2024</th><th>FAAC 2024</th><th>Dep%</th>
+            <th>D/Rev%</th><th>Unemp%</th><th>Security</th>
+          </tr></thead><tbody id="stateTableBody"></tbody></table>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    /* Sidebar nav */
-    document.getElementById('sidebarNav').innerHTML  = buildSidebarNav('index.html');
-    document.getElementById('mobileNavLinks').innerHTML = buildSidebarNav('index.html');
+    <!-- ══════════════════════════════════════
+         PAGE 3 — ACCOUNTABILITY SLIDESHOW
+    ══════════════════════════════════════ -->
+    <div class="page" id="page-audit">
+      <div class="page-header">
+        <div class="page-eyebrow" style="color:var(--red)">📉 Decade of Impact</div>
+        <h1 class="page-title">2015 – 2025: A Data Audit</h1>
+        <p class="page-sub">Ten years of APC-era governance measured against official data</p>
+      </div>
 
-    /* Zone grid */
-    const zg = document.getElementById('zoneGrid');
-    NG2027.ZONES.forEach(z => {
-      zg.innerHTML += `
-        <div class="zone-card">
-          <div class="zone-pop">${z.pop_m}M</div>
-          <div class="zone-name">${z.name}</div>
-          <div class="zone-count">${z.states.length} states</div>
-        </div>`;
-    });
+      <div class="card">
+        <div class="red-bar"></div>
+        <div class="slide-wrap">
+          <div class="slide-left">
+            <div style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:5px">2015 → 2025</div>
+            <div class="slide-cat" id="sCat">Inflation Crisis</div>
+            <h2 class="slide-hed" id="sHed">Consumer prices rose 369% in a decade</h2>
+            <p class="slide-body-txt" id="sBody"></p>
+            <div class="slide-metric">
+              <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:3px" id="sMlbl">Headline Inflation Rate (2025)</div>
+              <div class="slide-big" id="sMval">33.2%</div>
+              <div style="font-size:11px;color:#c43060;font-weight:600;margin-top:3px" id="sMdelta">↑ from 9.0% in 2015 — a 369% increase</div>
+            </div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:5px">
+              <span class="badge badge-v" style="font-size:9px">✓ Verified</span>
+              <span style="font-size:10px;color:var(--gray-400)" id="sSrc">NBS CPI Reports · CBN MPC Communiqués</span>
+            </div>
+          </div>
+          <div class="slide-right">
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:8px" id="sChartLbl">CPI (%) — 2015 to 2025</div>
+            <div style="flex:1;min-height:200px;position:relative">
+              <canvas id="mainChart" role="img" aria-label="Economic trend chart 2015–2025">Economic data 2015–2025</canvas>
+            </div>
+          </div>
+        </div>
+        <div class="slide-controls">
+          <div class="slide-dots" id="slideDots"></div>
+          <span style="font-size:10px;color:var(--gray-400);font-family:var(--font-mono)" id="slideCounter">1 / 4</span>
+          <div style="display:flex;gap:6px">
+            <button class="ctrl-btn" onclick="prevSlide()">‹</button>
+            <button class="ctrl-btn" id="playBtn" onclick="togglePlay()">⏸</button>
+            <button class="ctrl-btn" onclick="nextSlide()">›</button>
+          </div>
+        </div>
+      </div>
 
-    /* Party grid — first 8 */
-    const pg = document.getElementById('partyGrid');
-    NG2027.PARTIES.slice(0, 8).forEach(p => {
-      const tagClass = ['APC','PDP','LP','NNPP','SDP'].includes(p.abbr) ? `party-${p.abbr}` : 'party-OTHER';
-      pg.innerHTML += `
-        <div class="party-card" onclick="location.href='parties.html'">
-          <div class="abbr" style="color:${p.color}">${p.abbr}</div>
-          <div class="full-name">${p.full}</div>
-          <div class="chair">Chair: ${p.chair}</div>
-          <div style="margin-top:6px"><span class="party-tag ${tagClass}">${p.ideology.split('/')[0].trim()}</span></div>
-        </div>`;
-    });
-  </script>
+      <div class="mini-stats">
+        <div class="mini-stat"><div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:5px">📈 Inflation</div><div style="display:flex;align-items:center;gap:5px"><span style="font-size:10px;color:var(--gray-400);text-decoration:line-through;font-family:var(--font-mono)">9.0%</span><span style="font-size:9px;color:var(--gray-400)">→</span><span style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--red)">33.2%</span></div><div style="font-size:9px;color:var(--gray-500);margin-top:2px">Source: NBS</div></div>
+        <div class="mini-stat"><div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:5px">💵 Exchange</div><div style="display:flex;align-items:center;gap:5px"><span style="font-size:10px;color:var(--gray-400);text-decoration:line-through;font-family:var(--font-mono)">₦197/$</span><span style="font-size:9px;color:var(--gray-400)">→</span><span style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--red)">₦1,580/$</span></div><div style="font-size:9px;color:var(--gray-500);margin-top:2px">Source: CBN</div></div>
+        <div class="mini-stat"><div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:5px">🏦 Debt</div><div style="display:flex;align-items:center;gap:5px"><span style="font-size:10px;color:var(--gray-400);text-decoration:line-through;font-family:var(--font-mono)">₦12.6tn</span><span style="font-size:9px;color:var(--gray-400)">→</span><span style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--red)">₦134.3tn</span></div><div style="font-size:9px;color:var(--gray-500);margin-top:2px">Source: DMO</div></div>
+        <div class="mini-stat"><div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:5px">☠ Security</div><div style="display:flex;align-items:center;gap:5px"><span style="font-size:10px;color:var(--gray-400);text-decoration:line-through;font-family:var(--font-mono)">~11,500</span><span style="font-size:9px;color:var(--gray-400)">→</span><span style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--red)">~5,700 Q1</span></div><div style="font-size:9px;color:var(--gray-500);margin-top:2px">Source: ACLED·SBM</div></div>
+      </div>
+
+      <!-- All 4 charts -->
+      <div class="mt28">
+        <div class="sec-lbl">📊 All Trend Charts · 2015–2025</div>
+        <div class="g2">
+          <div class="card" style="padding:14px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:8px">Inflation (%)</div><div style="position:relative;height:150px"><canvas id="c1" role="img" aria-label="Inflation trend">9% to 33.2%</canvas></div></div>
+          <div class="card" style="padding:14px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:8px">Exchange Rate (₦/$)</div><div style="position:relative;height:150px"><canvas id="c2" role="img" aria-label="Exchange rate trend">₦197/$ to ₦1,580/$</canvas></div></div>
+          <div class="card" style="padding:14px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:8px">National Debt (₦ trillion)</div><div style="position:relative;height:150px"><canvas id="c3" role="img" aria-label="Debt trend">₦12.6tn to ₦134.3tn</canvas></div></div>
+          <div class="card" style="padding:14px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:8px">Security Fatalities</div><div style="position:relative;height:150px"><canvas id="c4" role="img" aria-label="Security trend">Annual fatalities</canvas></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PAGE 4 — PARTY DIRECTORY
+    ══════════════════════════════════════ -->
+    <div class="page" id="page-parties">
+      <div class="page-header">
+        <div class="page-eyebrow">🏛 INEC-Registered Parties</div>
+        <h1 class="page-title">Party Directory 2026</h1>
+        <p class="page-sub">All parties cleared by INEC for the 2027 election cycle</p>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <input type="text" id="partySearch" placeholder="Search parties by name, abbreviation or ideology…" oninput="filterParties()"
+          style="flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:13px;outline:none;color:var(--navy)"/>
+        <span class="badge badge-v">✓ INEC Register 2026</span>
+      </div>
+
+      <div style="font-size:11px;color:var(--gray-400);margin-bottom:12px"><span id="partyCount">19</span> parties registered</div>
+      <div class="party-grid" id="partyGrid"></div>
+
+      <div class="alert-banner mt12">
+        Chairpersons reflect known party leadership as of Q1 2025. Subject to change through internal party elections.
+      </div>
+
+      <div class="mt28">
+        <div class="sec-lbl">Full Registry Table</div>
+        <div class="card" style="overflow-x:auto">
+          <table class="data-table"><thead><tr>
+            <th>Abbr</th><th>Full Name</th><th>National Chairman</th><th>Founded</th><th>Ideology</th>
+          </tr></thead><tbody id="partyTableBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         PAGE 5 — VOTERS HUB
+    ══════════════════════════════════════ -->
+    <div class="page" id="page-hub">
+      <div class="hub-banner">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:3px">🗣 Voters' Hub</div>
+          <div style="font-family:var(--font-display);font-size:18px;font-weight:900;margin-bottom:3px">Community Accountability Feed</div>
+          <div style="font-size:11px;color:var(--gray-400)">Citizens earn <strong style="color:#fbbf24">Star Status</strong> based on their Truth Score — verified, data-backed posts.</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-v">✓ Verified posts</span>
+          <span class="badge badge-c">👤 Citizen reports</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+        <div class="pill-group" id="hubFilter" style="margin-bottom:0">
+          <button class="pill p-navy" onclick="filterHub('all',this)">All Posts</button>
+          <button class="pill" onclick="filterHub('verified',this)">✓ Verified</button>
+          <button class="pill" onclick="filterHub('citizen',this)">👤 Citizen</button>
+        </div>
+        <select onchange="sortHub(this.value)" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;background:var(--white);color:var(--navy);outline:none">
+          <option value="score">Sort: Truth Score</option>
+          <option value="votes">Sort: Most Upvotes</option>
+        </select>
+      </div>
+
+      <div class="post-wrap" id="hubFeed"></div>
+
+      <div class="mt28">
+        <div class="sec-lbl">⭐ Star Status System</div>
+        <div class="star-explainer" id="starExplainer"></div>
+        <div class="alert-banner mt12" style="font-size:11px">
+          <strong>Truth Score formula:</strong> Posts are scored on (1) Named data source cited, (2) Verifiable statistic referenced, (3) Date of data specified, (4) No misleading framing. Posts scoring 80%+ earn the ✓ Verified tag.
+        </div>
+      </div>
+
+      <div class="card mt20" style="padding:18px;border:2px dashed var(--gray-200)">
+        <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:5px">📝 Submit a Report</div>
+        <p style="font-size:12px;color:var(--gray-500);margin-bottom:10px">Share data-backed observations about government performance. Cite your source, include dates, avoid personal attacks. High-quality posts raise your Star Level.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" placeholder="Post title…" style="flex:1;min-width:180px;padding:9px 14px;border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;outline:none"/>
+          <button style="padding:9px 16px;background:var(--green);color:#fff;border-radius:var(--radius-sm);font-size:12px;font-weight:700;border:none;cursor:pointer" onclick="alert('Community submission is live in the full server version. For testing, this interface is read-only.')">Submit Post</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     BOTTOM NAV (Mobile)
+═══════════════════════════════════════════════ -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <div class="bn-item active" onclick="showPage('home',this)"><span class="bn-icon">⏱</span>Home</div>
+    <div class="bn-item" onclick="showPage('geo',this)"><span class="bn-icon">🗺</span>States</div>
+    <div class="bn-item" onclick="showPage('audit',this)"><span class="bn-icon">📉</span>Audit</div>
+    <div class="bn-item" onclick="showPage('parties',this)"><span class="bn-icon">🏛</span>Parties</div>
+    <div class="bn-item" onclick="showPage('hub',this)"><span class="bn-icon">🗣</span>Hub</div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     CHART.JS CDN
+═══════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<!-- ═══════════════════════════════════════════════
+     ALL DATA
+═══════════════════════════════════════════════ -->
+<script>
+/* ── DATA ── */
+const ELECTIONS = {
+  presidential: new Date('2027-01-16T08:00:00'),
+  governorship:  new Date('2027-02-06T08:00:00'),
+};
+
+const ECONOMIC = {
+  years: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+  inflation:    [9.0,15.7,16.5,12.1,11.4,13.2,17.0,21.3,28.9,32.7,33.2],
+  exchangeRate: [197,315,360,362,360,380,410,435,907,1310,1580],
+  nationalDebt: [12.6,17.4,21.7,24.4,27.4,32.9,38.0,46.3,87.4,121.7,134.3],
+  securityFatalities: [11500,9600,6800,7200,8100,9400,10200,9800,7600,6100,5700],
+};
+
+const SLIDES = [
+  { cat:'Inflation Crisis', hed:'Consumer prices rose 369% in a decade',
+    body:"Nigeria's headline inflation climbed from 9.0% in 2015 to 33.2% by early 2025. Food inflation hit 40.2% in early 2024, eroding household purchasing power at its fastest pace since the 1990s. The CBN's aggressive rate hikes to 26.25% in 2024 failed to stem the spiral, with energy subsidy removal compounding cost-of-living pressure.",
+    mlbl:'Headline Inflation Rate (2025)', mval:'33.2%', mdelta:'↑ from 9.0% in 2015 — a 369% increase',
+    src:'NBS CPI Reports · CBN MPC Communiqués', chartKey:'inflation', chartLbl:'CPI (%) — 2015 to 2025',
+    fmt: v => v.toFixed(1)+'%' },
+  { cat:'Naira Collapse', hed:'₦197/$ to ₦1,580/$: A 702% devaluation',
+    body:"The naira has lost over 87% of its value since 2015. The 2023 Tinubu-era FX unification triggered a near-instantaneous 60% devaluation. CBN interventions in 2024 briefly stabilised markets before further depreciation. Remittance inflows and FX reserves remain under structural pressure from import demand and debt servicing.",
+    mlbl:'USD/NGN Exchange Rate (2025)', mval:'₦1,580/$', mdelta:'↑ from ₦197/$ in 2015 — 702% depreciation',
+    src:'CBN FX Market Data · FMDQ OTC Exchange', chartKey:'exchangeRate', chartLbl:'₦/$ Rate — 2015 to 2025',
+    fmt: v => '₦'+v.toLocaleString()+'/$' },
+  { cat:'Debt Explosion', hed:'Public debt surged 966%: ₦12.6tn → ₦134.3tn',
+    body:"Nigeria's total public debt grew nearly tenfold. The most dramatic acceleration occurred post-2022 as FX losses inflated external debt in naira terms and Ways & Means financing expanded. DMO data shows debt service consumed 97.6 kobo of every naira of federal revenue in 2023, leaving minimal space for capital expenditure.",
+    mlbl:'Total Public Debt (2025)', mval:'₦134.3tn', mdelta:'966% increase from ₦12.6tn in 2015',
+    src:'DMO Quarterly Debt Reports · BudgIT FY2025', chartKey:'nationalDebt', chartLbl:'₦ Trillion — 2015 to 2025',
+    fmt: v => '₦'+v.toFixed(1)+'tn' },
+  { cat:'Security Crisis', hed:'5,700+ killed in Q1 2025 alone',
+    body:"SBM Intelligence and ACLED data shows over 100,000 conflict-related fatalities between 2015 and 2025. Boko Haram/ISWAP terrorism in the North East, farmer-herder conflicts across the Middle Belt, and surging banditry in the North West have driven the toll. The economic cost exceeds $1bn annually in lost productivity.",
+    mlbl:'Security Fatalities (Q1 2025)', mval:'~5,700', mdelta:'10-year cumulative: 100,000+',
+    src:'SBM Intelligence · ACLED Nigeria · NIS', chartKey:'securityFatalities', chartLbl:'Annual Fatalities — 2015 to 2025',
+    fmt: v => v.toLocaleString() },
+];
+
+const STATES = [
+  { name:'Kano', code:'KN', capital:'Kano', zone:'North West', governor:'Abba Kabir Yusuf', party:'APC',
+    pop:17.4, gdpPct:3.1, igr:28.6, faac:187.3, faacG:112.4,
+    debt:{total:196.8,dom:121.4,ext:75.4,dtr:89.7}, unemp:34.2, poverty:68.4, security:'High Risk',
+    industries:['Agriculture','Textiles','Trade','Leather'],
+    notes:'Kano IGR remains critically low relative to population size. FAAC dependency ratio ~86.7% makes the state highly vulnerable to federal revenue shocks. Security challenges in the metro area suppress FDI.',
+    src:'NBS, BudgIT State of States 2025, RMAFC', verified:'Q1 2025' },
+  { name:'Lagos', code:'LA', capital:'Ikeja', zone:'South West', governor:'Babajide Sanwo-Olu', party:'APC',
+    pop:24.2, gdpPct:29.0, igr:843.0, faac:213.5, faacG:104.1,
+    debt:{total:1241.6,dom:387.4,ext:854.2,dtr:118.2}, unemp:14.3, poverty:4.5, security:'Moderate',
+    industries:['Finance','Tech','Ports/Logistics','Entertainment','Manufacturing'],
+    notes:'Lagos accounts for ~29% of national GDP and generates the highest IGR in Nigeria. Despite robust revenues, debt-to-revenue exceeds 100% due to aggressive infrastructure financing. World Bank and IFC loans are significant.',
+    src:'NBS, BudgIT State of States 2025, LASG Revenue Office', verified:'Q1 2025' },
+  { name:'Rivers', code:'RV', capital:'Port Harcourt', zone:'South South', governor:'Siminalayi Fubara', party:'APC',
+    pop:8.3, gdpPct:7.4, igr:181.2, faac:312.7, faacG:118.9,
+    debt:{total:364.1,dom:198.4,ext:165.7,dtr:74.1}, unemp:22.1, poverty:31.7, security:'High Risk',
+    industries:['Oil & Gas','Ports','Petrochemicals','Fishing'],
+    notes:'Rivers receives among the highest FAAC allocations due to derivation revenue. Political instability in 2024-25 has dampened investor confidence. Port Harcourt is strategically critical to national oil infrastructure.',
+    src:'NBS, BudgIT State of States 2025, RMAFC', verified:'Q1 2025' },
+  { name:'Kaduna', code:'KD', capital:'Kaduna', zone:'North West', governor:'Uba Sani', party:'APC',
+    pop:9.4, gdpPct:2.8, igr:42.1, faac:148.6, faacG:108.3,
+    debt:{total:183.4,dom:112.7,ext:70.7,dtr:107.2}, unemp:29.4, poverty:58.2, security:'Critical',
+    industries:['Agriculture','Mining','Textiles','Cattle trade'],
+    notes:'Kaduna faces a protracted security crisis driven by ethnic conflict and banditry. Debt-to-revenue exceeds 100%, signalling acute fiscal distress. Farmer-herder conflicts in Southern Kaduna remain unresolved.',
+    src:'NBS, BudgIT State of States 2025', verified:'Q1 2025' },
+  { name:'Ogun', code:'OG', capital:'Abeokuta', zone:'South West', governor:'Dapo Abiodun', party:'APC',
+    pop:6.1, gdpPct:3.6, igr:94.8, faac:89.4, faacG:103.7,
+    debt:{total:143.2,dom:88.1,ext:55.1,dtr:78.4}, unemp:18.2, poverty:19.3, security:'Moderate',
+    industries:['Manufacturing','Agriculture','Real Estate','Industrials'],
+    notes:'Ogun has the highest concentration of manufacturing industries due to proximity to Lagos. IGR continues to grow driven by industrial zones in Sagamu and Agbara.',
+    src:'NBS, BudgIT State of States 2025', verified:'Q1 2025' },
+  { name:'Enugu', code:'EN', capital:'Enugu', zone:'South East', governor:'Peter Mbah', party:'PDP',
+    pop:4.7, gdpPct:1.8, igr:31.6, faac:74.8, faacG:106.1,
+    debt:{total:96.4,dom:61.2,ext:35.2,dtr:89.9}, unemp:24.1, poverty:42.6, security:'Moderate',
+    industries:['Coal/Mining','Agriculture','Services','Trade'],
+    notes:'Enugu is the commercial capital of the South East. Security has improved relative to 2022-23. IGR growth is modest but trending upward with new tax administration reforms under Gov. Mbah.',
+    src:'NBS, BudgIT State of States 2025', verified:'Q1 2025' },
+];
+
+const PARTIES = [
+  { abbr:'APC',  full:"All Progressives Congress",           chair:'Prof Yilwatda',   founded:2013, zone:'National',    ideology:'Progressive conservatism', color:'#166534' },
+  { abbr:'PDP',  full:"People's Democratic Party",           chair:"Umar Damagum (Ag.)", founded:1998, zone:'National',    ideology:'Social democracy',         color:'#1e40af' },
+  { abbr:'LP',   full:'Labour Party',                        chair:'Julius Abure',        founded:2002, zone:'National',    ideology:'Social liberalism',        color:'#991b1b' },
+  { abbr:'NNPP', full:'New Nigeria Peoples Party',           chair:'Ajuji Ahmad',   founded:2001, zone:'National',    ideology:'Populism',                 color:'#6b21a8' },
+  { abbr:'SDP',  full:'Social Democratic Party',             chair:'Shehu Gabam',         founded:1989, zone:'National',    ideology:'Social democracy',         color:'#0e7490' },
+  { abbr:'APGA', full:'All Progressives Grand Alliance',     chair:'Edozie Njoku',        founded:2003, zone:'South East', ideology:'Igbo nationalism',         color:'#065f46' },
+  { abbr:'ADC',  full:'African Democratic Congress',         chair:'David mark',    founded:2005, zone:'National',    ideology:'Liberal democracy',        color:'#1e3a8a' },
+  { abbr:'YPP',  full:'Young Progressives Party',            chair:'Bishop Amakwe',       founded:2017, zone:'National',    ideology:'Youth progressivism',      color:'#14532d' },
+  { abbr:'AAC',  full:'African Action Congress',             chair:'Omoyele Sowore',      founded:2017, zone:'National',    ideology:'Anti-corruption activism', color:'#7c2d12' },
+  { abbr:'PRP',  full:"People's Redemption Party",           chair:'Falalu Bello',        founded:1978, zone:'National',    ideology:'Leftist populism',         color:'#1d4ed8' },
+  { abbr:'ADP',  full:'Action Democratic Party',             chair:'Sani Musa',           founded:2017, zone:'National',    ideology:'Liberal conservatism',     color:'#374151' },
+  { abbr:'NRM',  full:'National Rescue Movement',            chair:'Alkali Buba',         founded:2012, zone:'National',    ideology:'Centrist nationalism',     color:'#374151' },
+  { abbr:'APM',  full:'Action Peoples Movement',             chair:'Suleiman Adamu',      founded:2018, zone:'National',    ideology:'Centrist',                 color:'#374151' },
+  { abbr:'BP',   full:'Boot Party',                          chair:'N/A',                 founded:2021, zone:'National',    ideology:'Social justice',           color:'#374151' },
+  { abbr:'DPP',  full:'Democratic Peoples Party',            chair:'Biodun Ogunsakin',    founded:2003, zone:'National',    ideology:'Conservative democracy',   color:'#374151' },
+  { abbr:'ACPN', full:'African Council of Patriotic Nationals',chair:'Gani Galadima',    founded:1999, zone:'National',    ideology:'Pan-African nationalism',  color:'#374151' },
+  { abbr:'SPN',  full:"Socialist Party of Nigeria",          chair:'Abiodun Bamigboye',   founded:2017, zone:'National',    ideology:'Democratic socialism',     color:'#374151' },
+  { abbr:'ZLP',  full:'Zenith Labour Party',                 chair:'Dan Nwanyanwu',       founded:1999, zone:'National',    ideology:'Labour interests',         color:'#374151' },
+  { abbr:'PPC',  full:"Peoples Positive Change",             chair:'Chike Ukaegbu',       founded:2015, zone:'National',    ideology:'Centrist reform',          color:'#374151' },
+];
+
+const ZONES = [
+  { name:'North West',    states:['Kano','Kaduna','Sokoto','Zamfara','Kebbi','Jigawa','Katsina'], pop:49.8 },
+  { name:'North East',    states:['Borno','Adamawa','Gombe','Bauchi','Yobe','Taraba'],            pop:26.3 },
+  { name:'North Central', states:['Niger','Benue','Kogi','Kwara','Nasarawa','Plateau','FCT'],     pop:33.1 },
+  { name:'South West',    states:['Lagos','Ogun','Oyo','Osun','Ondo','Ekiti'],                    pop:47.6 },
+  { name:'South East',    states:['Enugu','Anambra','Imo','Ebonyi','Abia'],                       pop:23.2 },
+  { name:'South South',   states:['Rivers','Delta','Edo','Cross River','Akwa Ibom','Bayelsa'],    pop:22.8 },
+];
+
+const HUB_POSTS = [
+  { id:1, user:'Aisha_DataNG', avatar:'A', zone:'Kano, North West', starLevel:4, truthScore:91, type:'verified', time:'2 hours ago',
+    title:'Kano 2024 FAAC Allocation vs Actual Budget Release',
+    body:'Cross-referencing RMAFC disbursements with Kano State budget implementation report (Q3 2024): only 38.4% of allocated FAAC funds reached approved capital projects. Overhead and personnel consumed ₦112bn of the ₦187bn total.',
+    tags:['#FAAC','#Kano','#BudgetTransparency'], upvotes:247, citations:3 },
+  { id:2, user:'ChidiBudgIT', avatar:'C', zone:'Enugu, South East', starLevel:5, truthScore:97, type:'verified', time:'5 hours ago',
+    title:'Debt Service vs Capital Expenditure: 10-State Analysis',
+    body:'Analysis from BudgIT State of States 2025 shows median debt service is 41.3% of total expenditure vs 22.8% capital spend. In 4 states (Zamfara, Adamawa, Kebbi, Borno) debt service exceeds capital expenditure by over 200%.',
+    tags:['#DebtProfile','#CapEx','#BudgIT'], upvotes:389, citations:5 },
+  { id:3, user:'FatimahNG2027', avatar:'F', zone:'Abuja, FCT', starLevel:2, truthScore:68, type:'citizen', time:'1 day ago',
+    title:'Market prices in Karu: Ground-level inflation report',
+    body:'Bean flour up 340% since January 2023 in Karu market. Garri (yellow) was ₦600/kg in early 2023, now ₦2,400/kg. This aligns with NBS food inflation data but the lived reality is even worse.',
+    tags:['#FoodInflation','#CitizenReport','#Abuja'], upvotes:142, citations:1 },
+  { id:4, user:'SecurityWatch_NG', avatar:'S', zone:'Kaduna, North West', starLevel:3, truthScore:84, type:'verified', time:'2 days ago',
+    title:'Kaduna Security Incidents Q1 2025: ACLED vs Official Reports',
+    body:'ACLED logs 312 conflict events in Kaduna State for Q1 2025. Official government figures acknowledged 187. The 67% discrepancy is consistent with underreporting patterns observed since 2019.',
+    tags:['#Security','#Kaduna','#ACLED'], upvotes:213, citations:2 },
+];
+
+const STAR_LEVELS = [
+  { level:1, label:'Newcomer',   range:'0–50',  color:'#ca8a04', bg:'#fefce8', border:'#fde047', desc:'Getting started' },
+  { level:2, label:'Contributor',range:'51–65', color:'#9a3412', bg:'#fff7ed', border:'#fed7aa', desc:'Cited sources'   },
+  { level:3, label:'Analyst',    range:'66–79', color:'#1e40af', bg:'#eff6ff', border:'#bfdbfe', desc:'Verified data'   },
+  { level:4, label:'Expert',     range:'80–94', color:'#7e22ce', bg:'#faf5ff', border:'#e9d5ff', desc:'High accuracy'   },
+  { level:5, label:'Legend',     range:'95–100',color:'#c2410c', bg:'#fff7ed', border:'#f97316', desc:'Elite verified'  },
+];
+
+const SEC_MAP = {
+  'Critical':  { cls:'sec-critical', dot:'#ef4444' },
+  'High Risk': { cls:'sec-high',     dot:'#f97316' },
+  'Moderate':  { cls:'sec-moderate', dot:'#eab308' },
+  'Stable':    { cls:'sec-stable',   dot:'#16a34a' },
+};
+
+/* ── Format helpers ── */
+const pad = (n,d=2) => String(n).padStart(d,'0');
+const fmtNaira = bn => bn >= 1000 ? '₦'+(bn/1000).toFixed(1)+'tn' : '₦'+bn.toFixed(1)+'bn';
+const fmtPct = n => n.toFixed(1)+'%';
+const ptag = abbr => ['APC','PDP','LP','NNPP','SDP'].includes(abbr) ? `pt-${abbr}` : 'pt-other';
+</script>
+
+<!-- ═══════════════════════════════════════════════
+     ALL APP LOGIC
+═══════════════════════════════════════════════ -->
+<script>
+/* ════════ NAVIGATION ════════ */
+const NAV_ITEMS = [
+  { id:'home',    icon:'⏱', label:'Home & Countdown'  },
+  { id:'geo',     icon:'🗺', label:'State Data Hub'    },
+  { id:'audit',   icon:'📉', label:'Decade of Impact'  },
+  { id:'parties', icon:'🏛', label:'Party Directory'   },
+  { id:'hub',     icon:'🗣', label:"Voters' Hub"       },
+];
+
+function buildNav(containerId, activeId) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.innerHTML = NAV_ITEMS.map(n =>
+    `<div class="nav-link${n.id===activeId?' active':''}" onclick="showPage('${n.id}')">
+       <span class="nav-icon">${n.icon}</span>${n.label}
+     </div>`
+  ).join('');
+}
+
+let currentPage = 'home';
+let chartsBuilt = false;
+
+function showPage(id, bnEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if (pg) pg.classList.add('active');
+  currentPage = id;
+  buildNav('desktopNav', id);
+  buildNav('drawerNav', id);
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bn-item').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+  });
+  if (id === 'audit' && !chartsBuilt) { buildAllCharts(); chartsBuilt = true; }
+  closeDrawer();
+  window.scrollTo(0,0);
+}
+
+function openDrawer()  { document.getElementById('drawerOverlay').classList.add('open'); document.getElementById('drawerPanel').classList.add('open'); }
+function closeDrawer() { document.getElementById('drawerOverlay').classList.remove('open'); document.getElementById('drawerPanel').classList.remove('open'); }
+
+/* ════════ COUNTDOWN ════════ */
+function tick() {
+  [
+    { t:ELECTIONS.presidential, d:'cd1d', h:'cd1h', m:'cd1m', s:'cd1s' },
+    { t:ELECTIONS.governorship,  d:'cd2d', h:'cd2h', m:'cd2m', s:'cd2s' },
+  ].forEach(({ t, d, h, m, s }) => {
+    const ms = t - new Date();
+    if (ms <= 0) return;
+    const days  = Math.floor(ms / 864e5);
+    const hours = Math.floor((ms % 864e5) / 36e5);
+    const mins  = Math.floor((ms % 36e5) / 6e4);
+    const secs  = Math.floor((ms % 6e4) / 1e3);
+    document.getElementById(d).textContent = pad(days,3);
+    document.getElementById(h).textContent = pad(hours);
+    document.getElementById(m).textContent = pad(mins);
+    document.getElementById(s).textContent = pad(secs);
+  });
+}
+tick(); setInterval(tick, 1000);
+
+/* ════════ HOME PAGE ════════ */
+// Zone grid
+const zg = document.getElementById('homeZoneGrid');
+ZONES.forEach(z => {
+  zg.innerHTML += `<div class="zone-card">
+    <div class="zone-pop">${z.pop}M</div>
+    <div class="zone-name">${z.name}</div>
+    <div class="zone-count">${z.states.length} states</div>
+  </div>`;
+});
+
+// Party grid (first 8)
+const pg = document.getElementById('homePartyGrid');
+PARTIES.slice(0,8).forEach(p => {
+  pg.innerHTML += `<div class="party-card" onclick="showPage('parties')">
+    <div class="p-abbr" style="color:${p.color}">${p.abbr}</div>
+    <div class="p-full">${p.full}</div>
+    <div class="p-chair" style="margin-bottom:6px">🪑 ${p.chair}</div>
+    <span class="ptag ${ptag(p.abbr)}">${p.ideology.split('/')[0].trim()}</span>
+  </div>`;
+});
+
+/* ════════ GEOPOLITICAL PAGE ════════ */
+let activeZone = 'All', activeState = STATES[0];
+
+// Zone filter
+const zf = document.getElementById('zoneFilter');
+['All', ...ZONES.map(z => z.name)].forEach(z => {
+  const btn = document.createElement('button');
+  btn.className = 'pill ' + (z === 'All' ? 'p-navy' : '');
+  btn.textContent = z;
+  btn.onclick = () => {
+    activeZone = z;
+    document.querySelectorAll('#zoneFilter .pill').forEach(b => { b.classList.remove('p-navy'); });
+    btn.classList.add('p-navy');
+    renderStateSelector();
+  };
+  zf.appendChild(btn);
+});
+
+function renderStateSelector() {
+  const sel = document.getElementById('stateSelector');
+  sel.innerHTML = '';
+  const filtered = activeZone === 'All' ? STATES : STATES.filter(s => s.zone === activeZone);
+  filtered.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'pill ' + (s.code === activeState.code ? 'p-green' : '');
+    btn.innerHTML = `<span style="font-size:9px;font-family:var(--font-mono);opacity:.6">${s.code}</span> ${s.name} <span class="ptag ${ptag(s.party)}" style="margin-left:3px">${s.party}</span>`;
+    btn.onclick = () => { activeState = s; renderStateDetail(s); renderStateSelector(); };
+    sel.appendChild(btn);
+  });
+}
+renderStateSelector();
+
+function renderStateDetail(s) {
+  const dep = ((s.faac / (s.faac + s.igr)) * 100).toFixed(1);
+  const domPct = ((s.debt.dom / s.debt.total) * 100).toFixed(1);
+  const ss = SEC_MAP[s.security] || SEC_MAP['Moderate'];
+
+  document.getElementById('sName').textContent = s.name + ' State';
+  document.getElementById('sSub').textContent  = `Capital: ${s.capital} · ${s.zone} · Gov. ${s.governor} (${s.party})`;
+  document.getElementById('sPop').textContent  = s.pop.toFixed(1) + 'M';
+  document.getElementById('sGdp').textContent  = s.gdpPct + '% of national GDP';
+
+  const badge = document.getElementById('sSecBadge');
+  badge.className = 'sec-badge ' + ss.cls;
+  badge.innerHTML = `<span class="sec-dot" style="background:${ss.dot}"></span>${s.security}`;
+
+  document.getElementById('sIGR').textContent     = fmtNaira(s.igr);
+  document.getElementById('sFAAC').textContent    = fmtNaira(s.faac);
+  document.getElementById('sFAACnote').textContent = '+' + s.faacG + '% YoY growth';
+  document.getElementById('sDep').textContent     = dep + '%';
+  document.getElementById('sDepBar').style.width  = Math.min(dep,100) + '%';
+  document.getElementById('sDTR').textContent     = s.debt.dtr + '%';
+  document.getElementById('sDTRsub').textContent  = fmtNaira(s.debt.total) + ' total debt';
+  document.getElementById('sDTRBar').style.width  = Math.min(s.debt.dtr,100) + '%';
+  document.getElementById('dTotal').textContent   = fmtNaira(s.debt.total);
+  document.getElementById('dDom').textContent     = fmtNaira(s.debt.dom);
+  document.getElementById('dExt').textContent     = fmtNaira(s.debt.ext);
+  document.getElementById('dbDom').style.width    = domPct + '%';
+  document.getElementById('sUnemp').textContent   = s.unemp + '%';
+  document.getElementById('sPoverty').textContent = s.poverty + '%';
+  document.getElementById('sIndustries').innerHTML = s.industries.map(i => `<span class="industry-tag">${i}</span>`).join('');
+  document.getElementById('sNotes').innerHTML     = `<strong style="font-size:10px;text-transform:uppercase;letter-spacing:.06em">📋 Analyst Notes</strong><br><br>${s.notes}`;
+  document.getElementById('sSource').textContent  = s.src;
+  document.getElementById('sVerified').textContent = s.verified;
+}
+renderStateDetail(activeState);
+
+// State comparison table
+const stb = document.getElementById('stateTableBody');
+STATES.forEach(s => {
+  const dep = ((s.faac / (s.faac + s.igr)) * 100).toFixed(1);
+  const ss = SEC_MAP[s.security] || SEC_MAP['Moderate'];
+  stb.innerHTML += `<tr style="cursor:pointer" onclick="activeState=STATES.find(x=>x.code==='${s.code}');renderStateDetail(activeState);renderStateSelector();showPage('geo')">
+    <td><strong>${s.name}</strong></td>
+    <td style="font-size:11px;color:var(--gray-500)">${s.zone}</td>
+    <td><span class="ptag ${ptag(s.party)}">${s.party}</span></td>
+    <td>${s.pop.toFixed(1)}</td>
+    <td>${fmtNaira(s.igr)}</td>
+    <td>${fmtNaira(s.faac)}</td>
+    <td style="color:${parseFloat(dep)>70?'var(--red)':'inherit'}">${dep}%</td>
+    <td style="color:${s.debt.dtr>80?'var(--red)':'inherit'}">${s.debt.dtr}%</td>
+    <td style="color:${s.unemp>25?'var(--red)':'inherit'}">${s.unemp}%</td>
+    <td><span class="sec-badge ${ss.cls}" style="font-size:9px"><span class="sec-dot" style="background:${ss.dot}"></span>${s.security}</span></td>
+  </tr>`;
+});
+
+/* ════════ ACCOUNTABILITY SLIDESHOW ════════ */
+let slideIdx = 0, playing = true, slideTimer = null, mainChart = null;
+
+function makeChart(canvasId, data, fmt) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ECONOMIC.years,
+      datasets: [{
+        data,
+        borderColor: '#E11D48',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#E11D48',
+        pointRadius: 3,
+        tension: 0.3,
+        fill: true,
+        backgroundColor: 'rgba(225,29,72,0.07)',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmt(ctx.raw) } }
+      },
+      scales: {
+        x: { ticks: { font:{size:9}, color:'#94a3b8' }, grid: { display:false } },
+        y: { ticks: { font:{size:9}, color:'#94a3b8', callback: v => v>=1000?(v/1000).toFixed(0)+'k':v }, grid: { color:'#f8fafc' } }
+      }
+    }
+  });
+}
+
+function buildAllCharts() {
+  mainChart = makeChart('mainChart', ECONOMIC.inflation, SLIDES[0].fmt);
+  makeChart('c1', ECONOMIC.inflation,           v => v.toFixed(1)+'%');
+  makeChart('c2', ECONOMIC.exchangeRate,         v => '₦'+v.toLocaleString()+'/$');
+  makeChart('c3', ECONOMIC.nationalDebt,         v => '₦'+v.toFixed(1)+'tn');
+  makeChart('c4', ECONOMIC.securityFatalities,   v => v.toLocaleString());
+}
+
+function renderSlide() {
+  const s = SLIDES[slideIdx];
+  document.getElementById('sCat').textContent    = s.cat;
+  document.getElementById('sHed').textContent    = s.hed;
+  document.getElementById('sBody').textContent   = s.body;
+  document.getElementById('sMlbl').textContent   = s.mlbl;
+  document.getElementById('sMval').textContent   = s.mval;
+  document.getElementById('sMdelta').textContent = s.mdelta;
+  document.getElementById('sSrc').textContent    = s.src;
+  document.getElementById('sChartLbl').textContent = s.chartLbl;
+  document.getElementById('slideCounter').textContent = (slideIdx+1)+' / '+SLIDES.length;
+  if (mainChart) {
+    mainChart.data.datasets[0].data = ECONOMIC[s.chartKey];
+    mainChart.options.plugins.tooltip.callbacks.label = ctx => s.fmt(ctx.raw);
+    mainChart.update('none');
+  }
+  renderDots();
+}
+
+function renderDots() {
+  const c = document.getElementById('slideDots');
+  if (!c) return;
+  c.innerHTML = SLIDES.map((_,i) =>
+    `<button class="sdot${i===slideIdx?' active':''}" onclick="goSlide(${i})"></button>`
+  ).join('');
+}
+
+function goSlide(i) { slideIdx=i; renderSlide(); if(playing) resetTimer(); }
+function nextSlide() { slideIdx=(slideIdx+1)%SLIDES.length; renderSlide(); if(playing) resetTimer(); }
+function prevSlide() { slideIdx=(slideIdx-1+SLIDES.length)%SLIDES.length; renderSlide(); if(playing) resetTimer(); }
+function resetTimer() { clearInterval(slideTimer); slideTimer=setInterval(nextSlide,7000); }
+function togglePlay() {
+  playing=!playing;
+  document.getElementById('playBtn').textContent = playing ? '⏸' : '▶';
+  playing ? resetTimer() : clearInterval(slideTimer);
+}
+renderDots(); // render dots immediately (chart builds on first visit)
+
+/* ════════ PARTY DIRECTORY ════════ */
+function renderPartyGrid(list) {
+  const grid = document.getElementById('partyGrid');
+  grid.innerHTML = list.map(p => `
+    <div class="party-card">
+      <div class="p-abbr" style="color:${p.color}">${p.abbr}</div>
+      <div class="p-full">${p.full}</div>
+      <div class="p-chair" style="margin-bottom:7px">🪑 ${p.chair}</div>
+      <span class="ptag ${ptag(p.abbr)}">${p.ideology.split('/')[0].trim()}</span>
+      <div style="margin-top:5px;font-size:10px;color:var(--gray-400)">Est. ${p.founded} · ${p.zone}</div>
+    </div>`
+  ).join('');
+  document.getElementById('partyCount').textContent = list.length;
+}
+
+function renderPartyTable(list) {
+  document.getElementById('partyTableBody').innerHTML = list.map(p =>
+    `<tr><td><strong style="color:${p.color}">${p.abbr}</strong></td>
+      <td>${p.full}</td><td>${p.chair}</td><td>${p.founded}</td>
+      <td style="font-size:11px;color:var(--gray-500)">${p.ideology}</td></tr>`
+  ).join('');
+}
+
+renderPartyGrid(PARTIES);
+renderPartyTable(PARTIES);
+
+function filterParties() {
+  const q = document.getElementById('partySearch').value.toLowerCase();
+  const f = PARTIES.filter(p =>
+    p.abbr.toLowerCase().includes(q) ||
+    p.full.toLowerCase().includes(q) ||
+    p.ideology.toLowerCase().includes(q) ||
+    p.chair.toLowerCase().includes(q)
+  );
+  renderPartyGrid(f);
+  renderPartyTable(f);
+}
+
+/* ════════ VOTERS HUB ════════ */
+const AVATAR_BG  = ['#e6f4ed','#dde4f0','#fff1f4','#f3e8ff','#ecfeff'];
+const AVATAR_CLR = ['#008751','#0F172A','#E11D48','#7c3aed','#0e7490'];
+
+function starBadgeHTML(level) {
+  const s = STAR_LEVELS[level-1] || STAR_LEVELS[0];
+  return `<span class="star-badge" style="background:${s.bg};border-color:${s.border};color:${s.color}">${'⭐'.repeat(level)} ${s.label}</span>`;
+}
+
+let hubFilter='all', hubSort='score';
+
+function getHubPosts() {
+  let posts = [...HUB_POSTS];
+  if (hubFilter==='verified') posts = posts.filter(p=>p.type==='verified');
+  if (hubFilter==='citizen')  posts = posts.filter(p=>p.type==='citizen');
+  if (hubSort==='score') posts.sort((a,b)=>b.truthScore-a.truthScore);
+  if (hubSort==='votes') posts.sort((a,b)=>b.upvotes-a.upvotes);
+  return posts;
+}
+
+function renderHub() {
+  const feed = document.getElementById('hubFeed');
+  const posts = getHubPosts();
+  const scoreColor = s => s>=80?'var(--green)':s>=65?'var(--amber)':'var(--red)';
+  feed.innerHTML = posts.map(p => {
+    const ai = p.user.charCodeAt(0) % 5;
+    return `<div class="hub-post">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div class="post-avatar" style="background:${AVATAR_BG[ai]};color:${AVATAR_CLR[ai]}">${p.avatar}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:3px">
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">${p.user}</span>
+            ${starBadgeHTML(p.starLevel)}
+            <span class="badge ${p.type==='verified'?'badge-v':'badge-c'}" style="font-size:9px">${p.type==='verified'?'✓ Verified':'👤 Citizen'}</span>
+            <span style="font-size:10px;color:var(--gray-400);margin-left:auto">${p.time}</span>
+          </div>
+          <div style="font-size:10px;color:var(--gray-400);margin-bottom:7px">📍 ${p.zone}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px">${p.title}</div>
+          <p style="font-size:12px;color:var(--gray-500);line-height:1.65;margin-bottom:8px">${p.body}</p>
+          <div style="margin-bottom:8px">${(p.tags||[]).map(t=>`<span class="post-tag">${t}</span>`).join('')}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:8px;border-top:1px solid var(--gray-100)">
+            <div class="truth-score" style="flex:1;min-width:160px">
+              <span style="font-size:10px;color:var(--gray-400);white-space:nowrap">Truth Score</span>
+              <div class="tscore-bar"><div class="tscore-fill" style="width:${p.truthScore}%;background:${scoreColor(p.truthScore)}"></div></div>
+              <span style="font-size:11px;font-weight:700;color:${scoreColor(p.truthScore)};min-width:30px">${p.truthScore}%</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span style="font-size:10px;color:var(--gray-400)">${p.citations} citations</span>
+              <button class="upvote-btn" onclick="this.textContent='▲ '+(parseInt(this.textContent.replace('▲ ',''))+1);this.style.color='var(--green)'">▲ ${p.upvotes}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterHub(type, btn) {
+  hubFilter = type;
+  document.querySelectorAll('#hubFilter .pill').forEach(b => b.classList.remove('p-navy'));
+  btn.classList.add('p-navy');
+  renderHub();
+}
+function sortHub(val) { hubSort = val; renderHub(); }
+renderHub();
+
+// Star level explainer
+const se = document.getElementById('starExplainer');
+STAR_LEVELS.forEach(s => {
+  se.innerHTML += `<div class="sl-card" style="border-color:${s.border};background:${s.bg}">
+    <div style="font-size:18px;margin-bottom:3px">${'⭐'.repeat(s.level)}</div>
+    <div style="font-size:10px;font-weight:700;color:${s.color};margin-bottom:2px">${s.label}</div>
+    <div style="font-size:9px;color:var(--gray-400)">Score: ${s.range}</div>
+    <div style="font-size:9px;color:var(--gray-500);margin-top:2px">${s.desc}</div>
+  </div>`;
+});
+
+/* ════════ INIT ════════ */
+buildNav('desktopNav', 'home');
+buildNav('drawerNav',  'home');
+</script>
 </body>
 </html>
